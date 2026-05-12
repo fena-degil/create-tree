@@ -6,6 +6,7 @@ import { useDiagramStore } from '../../store/diagramStore'
 export default function DiagramToolbar() {
   const addStandaloneNode = useDiagramStore((s) => s.addStandaloneNode)
   const deleteSelectedNodes = useDiagramStore((s) => s.deleteSelectedNodes)
+  const exportToJson = useDiagramStore((s) => s.exportToJson)
   const { fitView } = useReactFlow()
 
   const handleExport = useCallback(async () => {
@@ -48,6 +49,13 @@ export default function DiagramToolbar() {
         className="text-xs bg-white/10 hover:bg-white/20 text-white/70 hover:text-white px-3 py-1 rounded transition-colors"
       >
         全体表示
+      </button>
+      <button
+        onClick={exportToJson}
+        className="flex items-center gap-1 text-xs bg-white/10 hover:bg-white/20 text-white/70 hover:text-white px-3 py-1 rounded transition-colors"
+      >
+        <span>💾</span>
+        <span>JSON保存</span>
       </button>
       <button
         onClick={handleExport}

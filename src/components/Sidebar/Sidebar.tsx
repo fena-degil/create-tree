@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import ComponentTable from './ComponentTable'
 import ExcelUploader from '../Upload/ExcelUploader'
+import JsonImporter from '../Upload/JsonImporter'
 
 export default function Sidebar() {
   const [open, setOpen] = useState(true)
@@ -26,8 +27,15 @@ export default function Sidebar() {
 
       {open && (
         <div className="flex flex-col flex-1 overflow-hidden py-2 px-1">
-          {/* Excel uploader */}
-          <ExcelUploader />
+          {/* Import area: Excel and JSON side by side */}
+          <div className="flex gap-1">
+            <div className="flex-1">
+              <ExcelUploader />
+            </div>
+            <div className="flex-1">
+              <JsonImporter />
+            </div>
+          </div>
 
           {/* Divider */}
           <div className="border-t border-white/10 my-2" />

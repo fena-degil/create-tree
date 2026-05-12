@@ -110,6 +110,10 @@ interface DiagramState {
 
   // Reset all data
   resetAll: () => void
+
+  // JSON export / import
+  exportToJson: () => void
+  importFromJson: (json: unknown) => string | null  // returns error message or null
 }
 
 export const useDiagramStore = create<DiagramState>()(
@@ -362,6 +366,35 @@ export const useDiagramStore = create<DiagramState>()(
 
       resetAll: () => {
         set({ groups: [], functions: [], nodes: [], edges: [] })
+      },
+
+      exportToJson: () => {
+        const { groups, functions, nodes, edges } = get()
+        const data = { version: '2', groups, functions, nodes, edges }
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        const ts = new Date().toISOString().slice(0, 10)
+        a.download = `ve-diagram-${ts}.json`
+        a.click()
+        URL.revokeObjectURL(url)
+      },
+
+      importFromJson: (json) => {
+        if (typeof json !== 'object' || json === null) return '不正なファイル形式です'
+        const d = json as Record<string, unknown>
+        if (!Array.isArray(d.groups) || !Array.isArray(d.functions) ||
+            !Array.isArray(d.nodes) || !Array.isArray(d.edges)) {
+          return 'データ構造が正しくありません（groups / functions / nodes / edges が必要です）'
+        }
+        set({
+          groups: d.groups as ComponentGroup[],
+          functions: d.functions as FunctionItem[],
+          nodes: d.nodes as Node<FunctionNodeData>[],
+          edges: d.edges as Edge[],
+        })
+        return null
       },
     }),
     {
