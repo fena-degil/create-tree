@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useDiagramStore } from '../../store/diagramStore'
 import ColorPicker from './ColorPicker'
 import type { ComponentGroup, FunctionItem } from '../../types'
@@ -8,6 +9,7 @@ interface GroupRowProps {
 }
 
 export default function GroupRow({ group, functions }: GroupRowProps) {
+  const [collapsed, setCollapsed] = useState(false)
   const updateGroup = useDiagramStore((s) => s.updateGroup)
   const deleteGroup = useDiagramStore((s) => s.deleteGroup)
   const addFunction = useDiagramStore((s) => s.addFunction)
@@ -15,13 +17,23 @@ export default function GroupRow({ group, functions }: GroupRowProps) {
   const deleteFunction = useDiagramStore((s) => s.deleteFunction)
 
   return (
-    <div className="mb-2">
+    <div className="mb-1">
       {/* Component group header */}
       <div className="group flex items-center gap-1.5 px-1 py-1 rounded hover:bg-white/5">
+        {/* Collapse toggle */}
+        <button
+          onClick={() => setCollapsed((c) => !c)}
+          className="text-white/30 hover:text-white/70 transition-colors w-4 text-[10px] flex-shrink-0"
+          title={collapsed ? '展開' : '折りたたむ'}
+        >
+          {collapsed ? '▶' : '▼'}
+        </button>
+
         <ColorPicker
           value={group.color}
           onChange={(color) => updateGroup(group.id, { color })}
         />
+
         <input
           type="text"
           value={group.component}
@@ -29,6 +41,14 @@ export default function GroupRow({ group, functions }: GroupRowProps) {
           placeholder="構成要素名"
           className="flex-1 bg-transparent text-white text-xs font-medium placeholder-white/30 focus:outline-none focus:bg-white/10 rounded px-1 py-0.5 min-w-0"
         />
+
+        {/* Function count badge when collapsed */}
+        {collapsed && functions.length > 0 && (
+          <span className="text-white/30 text-[10px] flex-shrink-0">
+            {functions.length}件
+          </span>
+        )}
+
         <button
           onClick={() => addFunction(group.id)}
           title="機能を追加"
@@ -45,39 +65,42 @@ export default function GroupRow({ group, functions }: GroupRowProps) {
         </button>
       </div>
 
-      {/* Function items (indented) */}
-      {functions.map((fn, idx) => (
-        <div
-          key={fn.id}
-          className="group flex items-center gap-1 pl-5 pr-1 py-0.5 hover:bg-white/5 rounded"
-        >
-          <span className="text-white/20 text-xs flex-shrink-0 select-none">
-            {idx === functions.length - 1 ? '└' : '├'}
-          </span>
-          <input
-            type="text"
-            value={fn.functionText}
-            onChange={(e) => updateFunctionText(fn.id, e.target.value)}
-            placeholder="機能名"
-            className="flex-1 bg-transparent text-white/80 text-xs placeholder-white/25 focus:outline-none focus:bg-white/10 rounded px-1 py-0.5 min-w-0"
-          />
-          <button
-            onClick={() => deleteFunction(fn.id)}
-            className="opacity-0 group-hover:opacity-100 text-white/25 hover:text-red-400 text-xs px-1 transition-all flex-shrink-0"
-          >
-            ✕
-          </button>
-        </div>
-      ))}
+      {/* Function items — hidden when collapsed */}
+      {!collapsed && (
+        <>
+          {functions.map((fn, idx) => (
+            <div
+              key={fn.id}
+              className="group flex items-center gap-1 pl-7 pr-1 py-0.5 hover:bg-white/5 rounded"
+            >
+              <span className="text-white/20 text-xs flex-shrink-0 select-none">
+                {idx === functions.length - 1 ? '└' : '├'}
+              </span>
+              <input
+                type="text"
+                value={fn.functionText}
+                onChange={(e) => updateFunctionText(fn.id, e.target.value)}
+                placeholder="機能名"
+                className="flex-1 bg-transparent text-white/80 text-xs placeholder-white/25 focus:outline-none focus:bg-white/10 rounded px-1 py-0.5 min-w-0"
+              />
+              <button
+                onClick={() => deleteFunction(fn.id)}
+                className="opacity-0 group-hover:opacity-100 text-white/25 hover:text-red-400 text-xs px-1 transition-all flex-shrink-0"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
 
-      {/* Add function button (always visible when no functions yet) */}
-      {functions.length === 0 && (
-        <button
-          onClick={() => addFunction(group.id)}
-          className="pl-6 py-0.5 text-white/25 hover:text-white/60 text-xs transition-colors"
-        >
-          + 機能を追加
-        </button>
+          {functions.length === 0 && (
+            <button
+              onClick={() => addFunction(group.id)}
+              className="pl-8 py-0.5 text-white/25 hover:text-white/60 text-xs transition-colors"
+            >
+              + 機能を追加
+            </button>
+          )}
+        </>
       )}
     </div>
   )

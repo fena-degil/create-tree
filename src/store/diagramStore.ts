@@ -107,6 +107,9 @@ interface DiagramState {
 
   // Excel import
   importFromExcel: (items: Array<{ component: string; functionText: string }>) => void
+
+  // Reset all data
+  resetAll: () => void
 }
 
 export const useDiagramStore = create<DiagramState>()(
@@ -355,6 +358,10 @@ export const useDiagramStore = create<DiagramState>()(
           const nodes = recalcNumbers([...s.nodes, ...newNodes], s.edges)
           return { groups, functions, nodes }
         })
+      },
+
+      resetAll: () => {
+        set({ groups: [], functions: [], nodes: [], edges: [] })
       },
     }),
     {
