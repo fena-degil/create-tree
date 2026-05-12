@@ -4,6 +4,7 @@ import {
   Background,
   Controls,
   MiniMap,
+  SelectionMode,
   type Node,
   type Edge,
 } from '@xyflow/react'
@@ -49,6 +50,9 @@ export default function DiagramCanvas() {
           nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           defaultEdgeOptions={{ type: 'ortho' }}
+          selectionOnDrag
+          panOnDrag={[1, 2]}
+          selectionMode={SelectionMode.Partial}
           snapToGrid
           snapGrid={[20, 20]}
           fitView

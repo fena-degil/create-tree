@@ -53,9 +53,11 @@ export default function FunctionNode({ id, data, selected }: NodeProps) {
 
       {/* Node body */}
       <div
-        className="rounded-md px-3 py-2 min-w-[140px] max-w-[180px] shadow-md"
+        className="rounded-md px-2 w-[160px] shadow-md flex items-center justify-center overflow-hidden"
         style={{
           backgroundColor: color,
+          height: editing ? 'auto' : '48px',
+          minHeight: '48px',
           border: selected ? `2px solid rgba(255,255,255,0.4)` : '2px solid transparent',
           boxShadow: selected
             ? `0 0 0 2px ${color}88, 0 2px 8px rgba(0,0,0,0.5)`
@@ -78,13 +80,13 @@ export default function FunctionNode({ id, data, selected }: NodeProps) {
                 setDraft(label)
               }
             }}
-            className="w-full bg-transparent text-sm font-medium resize-none outline-none leading-snug text-center"
+            className="w-full bg-transparent text-xs font-medium resize-none outline-none leading-tight text-center py-1"
             style={{ color: textColor }}
             rows={2}
           />
         ) : (
           <div
-            className="text-sm font-medium text-center leading-snug whitespace-pre-wrap"
+            className="text-xs font-medium text-center leading-tight line-clamp-3 w-full px-1"
             style={{ color: textColor }}
           >
             {label || '機能を入力'}

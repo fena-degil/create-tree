@@ -14,12 +14,12 @@ import { nanoid } from 'nanoid'
 import type { ComponentGroup, FunctionItem, FunctionNodeData } from '../types'
 
 const DEFAULT_COLORS = [
-  '#1e3a5f',
-  '#2563eb',
-  '#0891b2',
-  '#059669',
-  '#d97706',
-  '#7c3aed',
+  '#3b82f6', // blue
+  '#22c55e', // green
+  '#f97316', // orange
+  '#8b5cf6', // violet
+  '#ef4444', // red
+  '#06b6d4', // cyan
 ]
 
 export const ZONE_WIDTH = 220
